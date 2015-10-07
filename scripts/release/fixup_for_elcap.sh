@@ -26,6 +26,8 @@ install_name_tool -add_rpath @executable_path/../../.. \
     "$temp_dir/$BASE/lib/couchdb/erlang/lib/snappy-1.0.4/priv/snappy_nif.so"
 install_name_tool -add_rpath @executable_path/../../.. \
     "$temp_dir/$BASE/lib/couchdb/erlang/lib/mapreduce-1.0/priv/mapreduce_nif.so"
+install name_tool -add_rpath @executable_path/../../.. \
+    "$temp_dir/$BASE/lib/couchdb/erlang/lib/couch-1.2.0a-961ad59-git/priv/lib/couch_ejson_compare.so"
 
 # indexer & gometaexecutable - needs $BASE/lib for libforestdb
 install_name_tool -add_rpath @executable_path/../lib \
@@ -54,8 +56,8 @@ patch --quiet "$temp_dir/$BASE/lib/python/couchstore.py" <<EOF
 -    traceback.print_exc()
 -    sys.exit(1)
 +    raise ImportError("Failed to locate suitable couchstore shared library")
- 
- 
+
+
  _lib.couchstore_strerror.restype = ctypes.c_char_p
 EOF
 
@@ -72,12 +74,12 @@ patch --quiet "$temp_dir/README.txt" <<EOF
 +*** “El Capitan” is not yet a Couchbase supported platform. This
 +*** developer preview should only be used on OS X 10.11 and only
 +*** for testing. See below for known issues.
- 
+
  Couchbase Server is a distributed NoSQL document database for
  interactive applications.  Its scale-out architecture runs in the
 @@ -18,3 +24,10 @@
  included with Couchbase Server at:
- 
+
  http://www.couchbase.com/redirect/agreement/3rdparty-license/Couchbase-server/4.0.0
 +
 +
@@ -85,7 +87,7 @@ patch --quiet "$temp_dir/README.txt" <<EOF
 +
 +* cbbackup, cbrestore & cbtransfer do not work when the source or
 +  destination type is ‘couchstore-files://' [MB-16454]
-+ 
++
 EOF
 
 # Package back into a zip file.
